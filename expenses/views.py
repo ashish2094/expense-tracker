@@ -22,6 +22,10 @@ class SearchView(LoginRequiredMixin, View):
         return JsonResponse(list(data), safe=False)
 
 #@login_required(login_url='/auth/login/')
+def welcome_view(request):
+    context = {}
+    return render(request, "index.html", context)
+
 def index_view(request):
     data = []
     data = Expense.objects.filter(owner=request.user)
