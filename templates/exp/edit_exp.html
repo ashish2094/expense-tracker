@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+   {% block content %}
+   <div class="container mt-4">
+      {% include 'partials/_messages.html' %}
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{% url 'expense' %}">Expenses</a></li>
+         <li class="breadcrumb-item active" aria-current="page">Edit Expense</li>
+         </ol>
+      </nav>
+      <h2>Edit Expense </h2>
+      <form action="{% url 'edit-expense' expense.id %}" method="post">
+         {% csrf_token %}
+
+         <div class="card mt-4">
+            <div class="card-body">
+               <div class="form-group">
+                  <label class="col-form-label" for="">Amount</label>
+                  <input type="number" class="form-control form-control-sm" name="amount" value="{{ expense.amount }}">
+               </div> 
+
+               <div class="form-group">
+                  <label class="col-form-label" for="">Description</label>
+                  <textarea class="form-control form-control-sm" name="description">{{ expense.description }}</textarea>
+               </div> 
+            
+               <div class="form-group">
+                  <label for="exampleSelect1">Category Select</label>
+                  <select class="form-control" name="category">
+                    <option selected>{{ expense.category }}</option>
+                    {% for category in categories%}
+                        <option name="category">{{ category }}</option>
+                     {% endfor %}
+                  </select>
+               </div>
+
+               <div class="form-group">
+                  <label class="col-form-label" for="">Date</label>
+                  <input type="date" class="form-control form-control-sm" name="date" value="{{ expense.date|date:"Y-m-d" }}">
+               </div>
+               <div class="text-center">
+                 <input type="submit" class="btn btn-outline-primary mt-2" name="submit" value="Update">
+               </div>
+            </div>
+         </div>
+      </form>
+   </div>
+   {% endblock %}

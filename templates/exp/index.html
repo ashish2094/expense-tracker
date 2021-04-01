@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content %}
+    
+    <div class="container mt-4">
+      {% include 'partials/_messages.html' %}
+      <div class="row">
+        <div class="col-md-10">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item active" aria-current="page">Expenses</li>
+              <li class="breadcrumb-item"><a href="#">My Expenses</a></li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-md-2">
+          <a class="btn btn-outline-primary py-1 mt-2" href="{% url 'add-expense' %}">Add Expense</a>
+        </div>
+      </div>
+         
+        <div class="row">
+          <div class="col-md-8">
+            <h1>Expenses</h1>
+          </div>
+          <div class="col-md-4 py-3">
+            <div class="form-group">
+              <input type="text" class="form-control" id="searchField" placeholder="Search">
+            </div>
+          </div>
+        </div>
+         
+        <div class="app-table">
+          {% if data.count %}
+        <table class="table table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Sr.No.</th>
+              <th scope="col">Date</th>
+              <th scope="col">Category</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Description</th>
+              <th scope="col">Edit</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for exp in page_obj %}
+            <tr>
+              <td scope="row">{{ forloop.counter }}</td> <!--It starts from one and incremented one-->
+              <td>{{ exp.date }}</td>
+              <td>{{ exp.category }}</td>
+              <td>{{ exp.amount }}</td>
+              <td>{{ exp.description }}</td>
+              <td><a class="btn btn-outline-success btn-sm py-1" href="{% url 'edit-expense' exp.id %}" name="edit">Edit</a></td>
+              <!--<td><a class="btn btn-outline-danger btn-sm py-1 open-popup" href="{% url 'delcnfrm-expense' exp.id %}" name="delete-cnfrm">Delete</a></td>-->
+              <td><button type="button" class="btn btn-outline-danger btn-sm py-1" data-bs-toggle="modal" data-bs-target="#exampleModal-{{ exp.id }}">
+                Delete
+              </button></td>
+            </tr>
+            <div>
+              <div class="modal fade" id="exampleModal-{{ exp.id }}" tabindex="-1" aria-labelledby="exampleModalLabel-{{ exp.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content alert alert-danger">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Confirm Deletion!</h5>
+                      <a class="btn btn-outline-danger py"  href="{% url 'delete-expense' exp.id %}" name="delete">Yes</a>
+                      <a class="btn btn-outline-danger py" data-bs-dismiss="modal" name="no-delete">No</a>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+        </div>
+
+        <div class="table-output">
+          <table class="table table-hover">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Sr.No.</th>
+                <th scope="col">Date</th>
+                <th scope="col">Category</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Description</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody class="search-table-body">
+              
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination-container">
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+            <li class="page-item active">
+              <a class="page-link" href="#">{{ page_obj.number }}</a>
+            </li>
+            {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            {% endif %}
+            
+          </ul>
+          <strong>Showing page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</strong>
+        </div>
+          
+          {% block confirm-del %}
+                
+          {% endblock %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script src="{% static 'js/search.js' %}"></script>
+    {% endblock %}
