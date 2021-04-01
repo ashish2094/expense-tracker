@@ -23,36 +23,36 @@ class RegistrationView(View):
         context = {
             'fieldValues' : request.POST
         }
-
-        if (User.objects.filter(username=username).exists()) == False:
-            if (User.objects.filter(email=email).exists()) == False:
-                if len(password)<8:
-                    messages.error(request, 'Password should be minimum 8 characters')
-                    return render(request, 'authentication/register.html', context)
-                else: 
-                    user = User.objects.create_user(username=username,email=email)
-                    user.set_password(password)
-                    user.is_active = True
-                    user.save()
-                    """
-                    send_mail(
-                        'Activate account',
-                        'Please activate your accouunt. Do not reply!',
-                        'noreply@project.com',
-                        [email],
-                        fail_silently=False,
-                    )
-                    """
-                    messages.success(request, 'Registration Successfull')
-                    return render(request, 'authentication/register.html')
-                
-            else:
-                messages.info(request, 'Email already exists')
-                return render(request, 'authentication/register.html', context)
-        else:
+        
+        try:
+            User.objects.filter(username=username).exists()
             messages.info(request, 'Username already exists')
             return render(request, 'authentication/register.html', context)
-        
+        except User.DoesNotExist:
+            try:
+                User.objects.filter(email=email).exists()
+                messages.info(request, 'Email already exists')
+                return render(request, 'authentication/register.html', context)
+            except User.DoesNotExist:
+                    if len(password)<8:
+                        messages.error(request, 'Password should be minimum 8 characters')
+                        return render(request, 'authentication/register.html', context)
+                    else: 
+                        user = User.objects.create_user(username=username,email=email)
+                        user.set_password(password)
+                        user.is_active = True
+                        user.save()
+                        """
+                        send_mail(
+                            'Activate account',
+                            'Please activate your accouunt. Do not reply!',
+                            'noreply@project.com',
+                            [email],
+                            fail_silently=False,
+                        )
+                        """
+                        messages.success(request, 'Registration Successfull')
+                        return render(request, 'authentication/register.html')        
 
 class LoginView(View):
     def get(self, request):
