@@ -88,7 +88,7 @@ class EditExpenseView(LoginRequiredMixin, View):
         expense.date = date
         expense.save()
         messages.info(request, 'Expense Updated Successfully!')
-        return redirect('/')
+        return redirect('/expenses/')
 
 class CnfrmDeleteView(LoginRequiredMixin, View):
     def get(self, request, id):
@@ -99,4 +99,4 @@ class DeleteExpenseView(LoginRequiredMixin, View):
         expense = Expense.objects.get(id=id)
         expense.delete()
         messages.info(request, 'Expense Deleted Successfully!')
-        return redirect('/')
+        return redirect('/expenses/')

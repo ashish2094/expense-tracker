@@ -44,7 +44,7 @@ class RegistrationView(View):
                     )
                     """
                     messages.success(request, 'Registration Successfull')
-                    return render(request, 'authentication/register.html')
+                    return render(request, 'authentication/login.html')
                 
             else:
                 messages.info(request, 'Email already exists')
