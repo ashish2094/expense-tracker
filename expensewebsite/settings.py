@@ -24,9 +24,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'us+3lq1-zq#-*=2gg-$l-)_yh-$1=*da28&%fm$em*y55z&obi'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '0.0.0.0',
+    'expenses-track.herokuapp.com',
+    '127.0.0.1']
 
 
 # Application definition
@@ -126,7 +129,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "expensewebsite/static/"),
 ]
-#STATIC_ROOT = os.path.join(BASE_DIR,'/static/')
+STATIC_ROOT = os.path.join(BASE_DIR,'/static/')
 
 #MESSAGES_TAGS = (
  #   messages.ERROR : "danger"
