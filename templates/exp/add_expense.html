@@ -1,49 +1,63 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-4">
+  {% include 'partials/_messages.html' %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'expense' %}">Expenses</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Add Expense</li>
+    </ol>
+  </nav>
+  <h2>Add Expense</h2>
+  <form action="{% url 'add-expense' %}" method="post">
+    {% csrf_token %}
 
-   {% block content %}
-   <div class="container mt-4">
-      {% include 'partials/_messages.html' %}
-      <nav aria-label="breadcrumb">
-         <ol class="breadcrumb">
-         <li class="breadcrumb-item"><a href="{% url 'expense' %}">Expenses</a></li>
-         <li class="breadcrumb-item active" aria-current="page">Add Expense</li>
-         </ol>
-      </nav>
-      <h2>Add Expense </h2>
-      <form action="{% url 'add-expense' %}" method="post">
-         {% csrf_token %}
+    <div class="card mt-4">
+      <div class="card-body">
+        <div class="form-group">
+          <label class="col-form-label" for=""
+            >Amount ({{ currency.name }})</label
+          >
+          <input
+            type="number"
+            class="form-control form-control-sm"
+            name="amount"
+          />
+        </div>
 
-         <div class="card mt-4">
-            <div class="card-body">
-               <div class="form-group">
-                  <label class="col-form-label" for="">Amount</label>
-                  <input type="number" class="form-control form-control-sm" name="amount" >
-               </div> 
+        <div class="form-group">
+          <label class="col-form-label" for="">Description</label>
+          <textarea
+            class="form-control form-control-sm"
+            name="description"
+          ></textarea>
+        </div>
 
-               <div class="form-group">
-                  <label class="col-form-label" for="">Description</label>
-                  <textarea class="form-control form-control-sm" name="description" ></textarea>
-               </div> 
-            
-               <div class="form-group">
-                  <label for="exampleSelect1">Category Select</label>
-                  <select class="form-control" name="category">
-                    <option selected>Choose..</option>
-                    {% for category in categories%}
-                        <option name="category">{{ category }}</option>
-                     {% endfor %}
-                  </select>
-               </div>
+        <div class="form-group">
+          <label for="exampleSelect1">Category Select</label>
+          <select class="form-control" name="category">
+            <option selected>Choose..</option>
+            {% for category in categories%}
+            <option name="category">{{ category }}</option>
+            {% endfor %}
+          </select>
+        </div>
 
-               <div class="form-group">
-                  <label class="col-form-label" for="">Date</label>
-                  <input type="date" class="form-control form-control-sm" name="date" >
-               </div>
-               <div class="text-center">
-                 <input type="submit" class="btn btn-outline-primary mt-2" name="submit" value="Submit">
-               </div>
-            </div>
-         </div>
-      </form>
-   </div>
-   {% endblock %}
+        <div class="form-group">
+          <label class="col-form-label" for="">Date</label>
+          <input type="date" class="form-control form-control-sm" name="date" />
+        </div>
+        <div class="text-center">
+          <input
+            type="submit"
+            class="btn btn-outline-primary mt-2"
+            name="submit"
+            value="Submit"
+          />
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.contrib import messages
 from .models import Category, Expense
+from userpref.models import UserPref
 from django.views import View
 from django.core.paginator import Paginator
 import json
@@ -25,16 +26,18 @@ class SearchView(LoginRequiredMixin, View):
 def welcome_view(request):
     context = {}
     return render(request, "index.html", context)
-
+    
 def index_view(request):
     data = []
     data = Expense.objects.filter(owner=request.user)
+    currency = UserPref.objects.get(user=request.user).currency
     p = Paginator(data, 4)
     page_no = request.GET.get('page')
     page_obj = Paginator.get_page(p, page_no)
     context = {
         'data': data,
-        'page_obj' : page_obj
+        'page_obj' : page_obj,
+        'currency' : currency
     }
     return render(request, "exp/index.html", context)
 
@@ -43,7 +46,12 @@ class AddExpenseView(LoginRequiredMixin, View):
     login_url = '/auth/login/'
     def get(self, request):
         categories = Category.objects.all()
-        return render(request, "exp/add_expense.html", {'categories': categories})
+        currency = UserPref.objects.get(user=request.user).currency
+        context = {
+            'categories': categories,
+            'currency' : currency
+            } 
+        return render(request, "exp/add_expense.html", context)
 
     def post(self, request):
         amount = request.POST['amount']
@@ -66,9 +74,11 @@ class EditExpenseView(LoginRequiredMixin, View):
     def get(self, request, id):
         expense = Expense.objects.get(id=id)
         categories = Category.objects.all()
+        currency = UserPref.objects.get(user=request.user).currency
         context = {
             'categories': categories,
-            'expense' : expense
+            'expense' : expense,
+            'currency' : currency
             }
         return render(request, "exp/edit_exp.html", context)
 
@@ -88,7 +98,7 @@ class EditExpenseView(LoginRequiredMixin, View):
         expense.date = date
         expense.save()
         messages.info(request, 'Expense Updated Successfully!')
-        return redirect('/expenses/')
+        return redirect('/')
 
 class CnfrmDeleteView(LoginRequiredMixin, View):
     def get(self, request, id):
@@ -99,4 +109,4 @@ class DeleteExpenseView(LoginRequiredMixin, View):
         expense = Expense.objects.get(id=id)
         expense.delete()
         messages.info(request, 'Expense Deleted Successfully!')
-        return redirect('/expenses/')
+        return redirect('/')

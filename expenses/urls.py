@@ -1,6 +1,6 @@
 from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
-from .views import AddExpenseView, EditExpenseView, DeleteExpenseView, welcome_view, index_view, CnfrmDeleteView, SearchView
+from .views import AddExpenseView, EditExpenseView, DeleteExpenseView, welcome_view,index_view, CnfrmDeleteView, SearchView
 
 #app_name = 'expenses'
 urlpatterns = [
